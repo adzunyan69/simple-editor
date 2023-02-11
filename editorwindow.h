@@ -2,6 +2,8 @@
 #define EDITORWINDOW_H
 
 #include <QMainWindow>
+#include <QPushButton>
+#include "objectwidget.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class EditorWindow; }
@@ -17,6 +19,12 @@ public:
 
 private:
     Ui::EditorWindow *ui;
+
+    QVector<ObjectWidget*> widgets;
+    QPushButton *saveButton{ nullptr };
+
+private slots:
+    void saveObjects();
 };
 
 #endif // EDITORWINDOW_H

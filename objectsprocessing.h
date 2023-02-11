@@ -89,7 +89,6 @@ public:
                return objects;
         }
 
-        //get the jsonObject
         const QJsonObject jObject = doc.object();
         qInfo() << "Keys: " << jObject.keys();
         for(auto it = jObject.constBegin(); it != jObject.constEnd(); ++it)
