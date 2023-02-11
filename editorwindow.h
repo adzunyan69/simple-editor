@@ -18,4 +18,5 @@ public:
 private:
     Ui::EditorWindow *ui;
 };
+
 #endif // EDITORWINDOW_H

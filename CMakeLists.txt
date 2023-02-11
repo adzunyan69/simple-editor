@@ -16,6 +16,7 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
 set(PROJECT_SOURCES
         main.cpp
+        objectsprocessing.h
         editorwindow.cpp
         editorwindow.h
         editorwindow.ui
