@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QPushButton>
+#include <QScrollArea>
 #include "objectwidget.h"
 
 QT_BEGIN_NAMESPACE
@@ -20,10 +21,14 @@ public:
 private:
     Ui::EditorWindow *ui;
 
+    QScrollArea *scrollArea{ nullptr };
+    QLayout *scrollLayout{ nullptr };
     QVector<ObjectWidget*> widgets;
     QPushButton *saveButton{ nullptr };
 
+
 private slots:
+    void loadObjects();
     void saveObjects();
 };
 

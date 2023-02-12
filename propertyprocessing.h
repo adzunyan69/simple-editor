@@ -9,9 +9,11 @@
 #include <QJsonObject>
 #include <limits>
 
+
 class PropertyInfo
 {
 public:
+
     // Constructor for the list or the array types
     PropertyInfo(QMetaType::Type type, const QVariantList &acceptedValues)
         : _type(type), _acceptedValues(acceptedValues)
@@ -49,13 +51,15 @@ public:
     }
 
 private:
-
-
     QMetaType::Type _type;
     QVariantList _acceptedValues; // for the Array type
     QVariant _from;
     QVariant _to;
 };
+
+using PropertyHash = QHash<QString, std::shared_ptr<PropertyInfo>>;
+using PropertyTable = QHash<QString, PropertyHash>;
+using Property = std::shared_ptr<PropertyInfo>;
 
 class PropertyInfoFactory
 {
@@ -66,7 +70,7 @@ public:
         {
             { "int", QMetaType::Type::Int },
             { "float", QMetaType::Type::Float },
-            { "icon", QMetaType::Type::QIcon },
+            { "image", QMetaType::Type::QIcon },
             { "array", QMetaType::Type::QStringList }
         };
 
@@ -77,6 +81,8 @@ public:
             return intProperty(jsonProperty);
         case QMetaType::Type::Float:
             return floatProperty(jsonProperty);
+        case QMetaType::Type::QIcon:
+            return iconProperty(jsonProperty);
         case QMetaType::Type::QStringList:
             return stringListProperty(jsonProperty);
         default:
@@ -110,13 +116,20 @@ private:
             }
         }
 
+        if(from > to)
+        {
+            qWarning() << QString("Invalid range (from %1 to %2)")
+                          .arg(QString::number(from),
+                               QString::number(to));
+            return nullptr;
+        }
         return std::make_unique<PropertyInfo>(QMetaType::Type::Int, from, to);
     }
 
     static std::unique_ptr<PropertyInfo> floatProperty(const QVariantHash &jsonProperty)
     {
-        int from = std::numeric_limits<float>::min();
-        int to = std::numeric_limits<float>::max();
+        float from = std::numeric_limits<float>::min();
+        float to = std::numeric_limits<float>::max();
         bool isValid = false;
         if(jsonProperty.contains("from"))
         {
@@ -135,6 +148,14 @@ private:
                 qWarning() << "Invalid field \"to\"";
                 return nullptr;
             }
+        }
+
+        if(from > to)
+        {
+            qWarning() << QString("Invalid range (from %1 to %2)")
+                          .arg(QString::number(from),
+                               QString::number(to));
+            return nullptr;
         }
 
         return std::make_unique<PropertyInfo>(QMetaType::Type::Float, from, to);
@@ -159,22 +180,17 @@ private:
 class PropertyProcessing
 {
 public:
-    using PropertyHash = QHash<QString, std::unique_ptr<PropertyInfo>>;
-    using PropertyTable = QHash<QString, PropertyHash>;
-    PropertyProcessing(const QString &filename)
-        : _filename(filename)
-    {
-    }
+    PropertyProcessing() = default;
 
-    PropertyTable readPropertyConfig() const
+    PropertyTable readPropertyConfig(const QString &filename) const
     {
         PropertyTable properties;
 
-        QFile file(_filename);
+        QFile file(filename);
         if(!file.open(QIODevice::ReadOnly))
         {
             qWarning() << QString("Couldn't open property config file %1")
-                          .arg(_filename);
+                          .arg(filename);
             return properties;
         }
 
@@ -198,13 +214,12 @@ public:
 
     }
 private:
-    const QString _filename;
     PropertyHash getPropertyHash(const QJsonObject &jsonObject) const
     {
         PropertyHash propertyHash;
         for(auto it = jsonObject.constBegin(); it != jsonObject.constEnd(); ++it)
         {
-            propertyHash[it.key()] = PropertyInfoFactory::makeProperty(it.value().toObject().toVariantHash());
+            propertyHash[it.key()] = std::shared_ptr(PropertyInfoFactory::makeProperty(it.value().toObject().toVariantHash()));
         }
 
         return propertyHash;

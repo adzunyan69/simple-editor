@@ -3,11 +3,9 @@
 
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QJsonArray>
 #include <QVector>
 #include <QFile>
-
-namespace Utility
-{
 
 class CustomObject
 {
@@ -37,7 +35,7 @@ public:
     }
 
 private:
-    const QString _objectName;
+    QString _objectName;
     QList<QString> _propertiesNames;
     QVariantHash _properties;
 };
@@ -92,8 +90,8 @@ public:
         qInfo() << "Keys: " << jObject.keys();
         for(auto it = jObject.constBegin(); it != jObject.constEnd(); ++it)
         {
-            objects.push_back(CustomObject(it.key(),
-                              it.value().toObject().toVariantHash()));
+            auto objectsFromArray = getObjectsFromArray(it.key(), it->toArray());
+            objects.append(objectsFromArray);
         }
 
         return objects;
@@ -101,6 +99,18 @@ public:
 
 private:
     const QString _filename;
+
+    QVector<CustomObject> getObjectsFromArray(const QString &objectName,
+                       const QJsonArray &array)
+    {
+        QVector<CustomObject> objects;
+        for(auto it = array.constBegin(); it != array.constEnd(); ++it)
+        {
+            objects.push_back(CustomObject(objectName, it->toObject().toVariantHash()));
+        }
+
+        return objects;
+    }
 };
 
 class JsonObjectsWriter : public ObjectsWriter
@@ -146,52 +156,5 @@ public:
         writer->writeObjects(objects);
     }
 };
-
-}
-//class ObjectEditorWidget
-//{
-//public:
-//    void drawObject(QObject* obj)
-//    {
-//        obj->objectName(); // "Player"
-//        obj->dynamicPropertyNames(); // "Material", "Speed"
-//        auto widget = new QWidget();
-//        wdiget->label("Player");
-//        widget->addListBox("material1")...; // "array"
-//        obj->property("Material")
-//    }
-//    ObjectDescription save()
-//    {
-//        return { }//obj->property("Material")->setValue("material2");
-//    }
-//private:
-
-//};
-
-
-
-// ObjectColletion -> vector<QObject*>
-// obj->setPropert("Speed", ...)
-// obj->setPropert("Material", ...)
-
-// PropertiesCollection properties
-/* "Player": { "Speed": { "type": "float", "from": 1.0 }, "Material": { "type": "array", "items": { ... } } } */
-// properties["Player"]["Speed"]->getType(); getFrom() getTo() getItems()
-
-// obs->proeptyList();
-// .. obs->property(propetyName) -> valut to the gui
-// .. properties["Player"][propertyName]->
-
-
-
-
-
-
-
-
-
-
-
-
 
 #endif // OBJECTSPROCESSING_H

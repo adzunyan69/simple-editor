@@ -2,26 +2,32 @@
 #include "./ui_editorwindow.h"
 #include <QDebug>
 #include "objectsprocessing.h"
+#include "propertyprocessing.h"
+
 EditorWindow::EditorWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::EditorWindow)
+    : QMainWindow(parent),
+      ui(new Ui::EditorWindow),
+      scrollArea(new QScrollArea(this)),
+      scrollLayout(new QVBoxLayout(scrollArea)),
+      saveButton(new QPushButton("Save", this))
 {
     ui->setupUi(this);
 
-    using namespace Utility;
-    auto objects = ObjectProcessing().read(std::make_unique<JsonObjectsReader>("objects.json"));
+    scrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
+    scrollArea->setWidgetResizable( true );
+    // scrollArea->setGeometry( 10, 10, 200, 200 );
 
-    for(auto &object: objects)
-    {
-        auto objectWidget = new ObjectWidget(object, this);
-        widgets.push_back(objectWidget);
-        ui->verticalLayout->addWidget(objectWidget);
-    }
+    QWidget *scrollContainerWidget = new QWidget();
+    scrollContainerWidget->setLayout(scrollLayout);
+    scrollArea->setWidget( scrollContainerWidget );
 
-    saveButton = new QPushButton("Save", this);
+    ui->verticalLayout->addWidget(scrollArea);
+    ui->verticalLayout->addWidget(saveButton);
+
+    loadObjects();
+
     connect(saveButton, &QPushButton::clicked,
             this, &EditorWindow::saveObjects);
-    ui->verticalLayout->addWidget(saveButton);
 }
 
 EditorWindow::~EditorWindow()
@@ -29,11 +35,31 @@ EditorWindow::~EditorWindow()
     delete ui;
 }
 
+void EditorWindow::loadObjects()
+{
+    auto objects = ObjectProcessing().read(std::make_unique<JsonObjectsReader>("objects.json"));
+    auto propertyTable = PropertyProcessing().readPropertyConfig("properties.json");
+
+    for(auto &object: objects)
+    {
+        if(propertyTable.contains(object.objectName()) == false)
+        {
+            qWarning() << QString("Invalid property for the object %1")
+                          .arg(object.objectName());
+            continue;
+        }
+
+        auto objectWidget = new ObjectWidget(object, propertyTable[object.objectName()], this);
+        widgets.push_back(objectWidget);
+        scrollLayout->addWidget(objectWidget);
+    }
+
+}
+
 void EditorWindow::saveObjects()
 {
-    using namespace Utility;
     qInfo() << "Save button clicked";
-    QVector<Utility::CustomObject> objects;
+    QVector<CustomObject> objects;
     for(auto &w: widgets)
         objects.push_back(w->object());
 
