@@ -1,5 +1,5 @@
 #include "icon_property_widget.h"
-
+#include <QDebug>
 IconPropertyWidget::IconPropertyWidget(const QString &propertyName,
                                        const Property &property,
                                        QWidget *parent)
@@ -34,7 +34,10 @@ void IconPropertyWidget::setValue(const QVariant &value)
         filename = value.toString();
         QPixmap pixmap(filename);
         if(pixmap.isNull())
-            pixmapLabel->setText("Image doesn't exists");
+        {
+            qWarning() << "Picture isn't exists";
+            pixmapLabel->setText("Image doesn't \nexists");
+        }
         else
         {
             pixmap = pixmap.scaled(35, 35, Qt::IgnoreAspectRatio);
