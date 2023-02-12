@@ -15,10 +15,25 @@ void JsonObjectsWriter::writeObjects(const QVector<CustomObject> &objects)
         return;
     }
 
-    // Writting objects to the json file
+    // Creating arrays of the certain object types
     QJsonObject root;
+    QHash<QString, QJsonArray> objArrays;
     for(auto &object : objects)
-        root.insert(object.objectName(), QJsonObject::fromVariantHash(object.propertiesTable()));
+    {
+        auto obj = QJsonObject::fromVariantHash(object.propertiesTable());
+        if(objArrays.contains(object.objectName()) == false)
+        {
+            objArrays.insert(object.objectName(), QJsonArray());
+        }
+
+        objArrays[object.objectName()].append(QJsonObject::fromVariantHash(object.propertiesTable()));
+    }
+
+    // Appending all arrays to the root
+    for(auto it = objArrays.constKeyValueBegin(); it != objArrays.constKeyValueEnd(); ++it)
+    {
+        root.insert(it->first, it->second);
+    }
 
     QJsonDocument doc(root);
     QTextStream stream(&file);
