@@ -46,7 +46,7 @@ void IconPropertyWidget::setValue(const QVariant &value)
 void IconPropertyWidget::updateIcon()
 {
     QString file = QFileDialog::getOpenFileName(this,
-        tr("Open Image"), QDir::currentPath(), tr("Image Files (*.png *.jpg *.bmp *.)"));
+        tr("Open Image"), QDir::currentPath(), tr("Image Files (*.png *.jpg *.bmp *.ico)"));
 
     if(file.isEmpty() == false)
         setValue(file);

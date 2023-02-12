@@ -10,7 +10,7 @@ FloatPropertyWidget::FloatPropertyWidget(const QString &propertyName,
         spinBox = new QDoubleSpinBox(this);
         spinBox->setMinimum(property->from().toFloat());
         spinBox->setMaximum(property->to().toFloat());
-        spinBox->setMaximumWidth(75);
+        spinBox->setFixedWidth(75); // without any logic
 
         propertyLayout->addItem(new QSpacerItem(1, 1, QSizePolicy::Expanding));
         propertyLayout->addWidget(spinBox);

@@ -10,6 +10,7 @@ StringListPropertyWidget::StringListPropertyWidget(const QString &propertyName,
     if(propertyLayout)
     {
         stringBox = new QComboBox(this);
+        stringBox->setFixedWidth(75); // without any logic
         for(auto &value: property->accpetedValues())
             stringBox->addItem(value.toString());
 

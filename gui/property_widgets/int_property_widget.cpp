@@ -10,7 +10,7 @@ IntPropertyWidget::IntPropertyWidget(const QString &propertyName,
         spinBox = new QSpinBox(this);
         spinBox->setMinimum(property->from().toInt());
         spinBox->setMaximum(property->to().toInt());
-        spinBox->setMaximumWidth(75);
+        spinBox->setFixedWidth(75); // without any logic
 
         propertyLayout->addItem(new QSpacerItem(1, 1, QSizePolicy::Expanding));
         propertyLayout->addWidget(spinBox);
