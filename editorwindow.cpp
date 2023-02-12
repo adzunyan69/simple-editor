@@ -69,6 +69,6 @@ void EditorWindow::saveObjects()
     for(auto &w: widgets)
         objects.push_back(w->object());
 
-    ObjectProcessing().write(objects, std::make_unique<JsonObjectsWriter>("objects_new.json"));
+    ObjectProcessing().write(objects, std::make_unique<JsonObjectsWriter>("objects.json"));
 }
 

@@ -18,8 +18,9 @@ void JsonObjectsWriter::writeObjects(const QVector<CustomObject> &objects)
     // Writting objects to the json file
     QJsonObject root;
     for(auto &object : objects)
-        root.insert(object.objectName() + " test", QJsonObject::fromVariantHash(object.propertiesTable()));
+        root.insert(object.objectName(), QJsonObject::fromVariantHash(object.propertiesTable()));
 
     QJsonDocument doc(root);
-    qDebug() << doc.toJson();
+    QTextStream stream(&file);
+    stream << QString(doc.toJson(QJsonDocument::Indented));
 }
