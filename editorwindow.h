@@ -4,12 +4,14 @@
 #include <QMainWindow>
 #include <QPushButton>
 #include <QScrollArea>
-#include "objectwidget.h"
+
+#include "gui/object_widget.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class EditorWindow; }
 QT_END_NAMESPACE
 
+// Main Edtor Window (container for the object widgets)
 class EditorWindow : public QMainWindow
 {
     Q_OBJECT
@@ -26,8 +28,9 @@ private:
     QVector<ObjectWidget*> widgets;
     QPushButton *saveButton{ nullptr };
 
-
+    void initGUI();
 private slots:
+
     void loadObjects();
     void saveObjects();
 };

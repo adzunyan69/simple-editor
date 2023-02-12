@@ -15,13 +15,39 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 set(PROJECT_SOURCES
         main.cpp
-        objectsprocessing.h
         editorwindow.cpp
-        objectwidget.h
-        objectwidget.cpp
-        propertyprocessing.h
         editorwindow.h
         editorwindow.ui
+
+        custom_objects/custom_object.h
+        custom_objects/object_reader.h
+        custom_objects/json_object_reader.h
+        custom_objects/json_object_reader.cpp
+        custom_objects/object_writer.h
+        custom_objects/json_object_writer.h
+        custom_objects/json_object_writer.cpp
+        custom_objects/object_processing.h
+
+        gui/object_widget.h
+        gui/object_widget.cpp
+        gui/property_widget.h
+        gui/property_widget.cpp
+        gui/property_widget_factory.h
+        gui/property_widget_factory.cpp
+        gui/property_widgets/int_property_widget.h
+        gui/property_widgets/int_property_widget.cpp
+        gui/property_widgets/float_property_widget.h
+        gui/property_widgets/float_property_widget.cpp
+        gui/property_widgets/stringlist_property_widget.h
+        gui/property_widgets/stringlist_property_widget.cpp
+        gui/property_widgets/icon_property_widget.h
+        gui/property_widgets/icon_property_widget.cpp
+
+        properties_config/property_info.h
+        properties_config/property_info_factory.h
+        properties_config/property_info_factory.cpp
+        properties_config/property_processing.h
+        properties_config/property_processing.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
