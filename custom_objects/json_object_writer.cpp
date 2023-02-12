@@ -20,13 +20,13 @@ void JsonObjectsWriter::writeObjects(const QVector<CustomObject> &objects)
     QHash<QString, QJsonArray> objArrays;
     for(auto &object : objects)
     {
-        auto obj = QJsonObject::fromVariantHash(object.propertiesTable());
+        auto obj = QJsonObject::fromVariantMap(object.propertiesTable());
         if(objArrays.contains(object.objectName()) == false)
         {
             objArrays.insert(object.objectName(), QJsonArray());
         }
 
-        objArrays[object.objectName()].append(QJsonObject::fromVariantHash(object.propertiesTable()));
+        objArrays[object.objectName()].append(obj);
     }
 
     // Appending all arrays to the root

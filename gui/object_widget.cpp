@@ -44,9 +44,9 @@ QWidget *ObjectWidget::createObjectWidget(const CustomObject &object,
 
 CustomObject ObjectWidget::object() const
 {
-    QVariantHash propertiesHash;
+    QVariantMap propertiesMap;
     for(auto &property: propertyWidgets)
-        propertiesHash[property->objectName()] = property->value();
+        propertiesMap[property->objectName()] = property->value();
 
-    return CustomObject(this->objectName(), propertiesHash);
+    return CustomObject(this->objectName(), propertiesMap);
 }

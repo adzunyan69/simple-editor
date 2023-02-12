@@ -9,7 +9,7 @@ class CustomObject
 {
 public:
     CustomObject(const QString &objectName,
-                 const QVariantHash &propertiesTable)
+                 const QVariantMap &propertiesTable)
         : _objectName(objectName),
           _propertiesTable(propertiesTable)
     { }
@@ -19,14 +19,14 @@ public:
         return _objectName;
     }
 
-    QVariantHash propertiesTable() const
+    QVariantMap propertiesTable() const
     {
         return _propertiesTable;
     }
 
 private:
     QString _objectName;
-    QVariantHash _propertiesTable;
+    QVariantMap _propertiesTable;
 };
 
 #endif // CUSTOMOBJECT_H

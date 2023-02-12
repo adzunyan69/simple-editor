@@ -47,7 +47,7 @@ QVector<CustomObject> JsonObjectsReader::getObjectsFromArray(const QString &obje
     {
         auto o = it->toObject();
         auto h = o.toVariantHash();
-        objects.push_back(CustomObject(objectName, it->toObject().toVariantHash()));
+        objects.push_back(CustomObject(objectName, it->toObject().toVariantMap()));
     }
 
     return objects;
