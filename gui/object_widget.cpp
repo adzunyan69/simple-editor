@@ -28,7 +28,7 @@ QWidget *ObjectWidget::createObjectWidget(const CustomObject &object,
         {
             qWarning() << QString("Invalid object property %1")
                           .arg(it->first);
-            return groupBox;
+            continue;
         }
         // Appen certain property and set current value
         auto propertyWidget = PropertyWidgetFactory::makeWidget(it->first,

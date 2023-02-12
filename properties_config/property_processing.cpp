@@ -37,7 +37,13 @@ PropertyHash PropertyProcessing::getPropertyHash(const QJsonObject &jsonObject) 
     PropertyHash propertyHash;
     for(auto it = jsonObject.constBegin(); it != jsonObject.constEnd(); ++it)
     {
-        propertyHash[it.key()] = std::shared_ptr(PropertyInfoFactory::makeProperty(it.value().toObject().toVariantHash()));
+        auto property = std::shared_ptr(PropertyInfoFactory::makeProperty(it.value().toObject().toVariantHash()));
+        if(property == nullptr)
+        {
+            qWarning() << "Received invalid property";
+            continue;
+        }
+        propertyHash[it.key()] = property;
     }
 
     return propertyHash;
