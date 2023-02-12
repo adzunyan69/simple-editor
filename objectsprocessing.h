@@ -75,14 +75,13 @@ public:
         QFile file(_filename);
 
         if (!file.open(QIODevice::ReadOnly)) {
-            qWarning("Couldn't open file.");
+            qWarning() << QString("Couldn't open ojects file %1")
+                          .arg(_filename);
             return objects;
         }
 
-        QByteArray saveData = file.readAll();
-
         QJsonParseError parseError;
-        const QJsonDocument doc(QJsonDocument::fromJson(saveData, &parseError));
+        const QJsonDocument doc(QJsonDocument::fromJson(file.readAll(), &parseError));
 
         if (parseError.error != QJsonParseError::NoError) {
                qWarning() << "Parse error at" << parseError.offset << ":" << parseError.errorString();

@@ -19,6 +19,7 @@ set(PROJECT_SOURCES
         editorwindow.cpp
         objectwidget.h
         objectwidget.cpp
+        propertyprocessing.h
         editorwindow.h
         editorwindow.ui
 )
