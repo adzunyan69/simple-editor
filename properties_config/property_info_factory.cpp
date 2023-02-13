@@ -64,8 +64,11 @@ std::unique_ptr<PropertyInfo> PropertyInfoFactory::intProperty(const QVariantHas
 
 std::unique_ptr<PropertyInfo> PropertyInfoFactory::floatProperty(const QVariantHash &jsonProperty)
 {
-    float from = std::numeric_limits<float>::min();
-    float to = std::numeric_limits<float>::max();
+    //Asserts floating point compatibility at compile time
+    static_assert(std::numeric_limits<float>::is_iec559, "IEEE 754 required");
+
+    float from = -std::numeric_limits<float>::infinity();
+    float to = std::numeric_limits<float>::infinity();
     bool isValid = false;
     if(jsonProperty.contains("from"))
     {
